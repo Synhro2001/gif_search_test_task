@@ -1,26 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:gif_search_test_task/widgets/navbar.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  String searchQuery = '';
+
+  bool isLoading = false;
+
+  List<String> gifs = [];
+
+  String? errorMessage;
+
+  void searchGifs(String query) {
+    setState(() {
+      searchQuery = query;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            const Navbar(title: 'GIF Search'),
-            const Expanded(
-              child: Center(
-                child: Text(
-                  'Hello world',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-                ),
+      body: Column(
+        children: [
+          Navbar(title: 'Gif Search', onSearch: searchGifs),
+
+          const Expanded(
+            child: Center(
+              child: Text(
+                'Hello World',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
