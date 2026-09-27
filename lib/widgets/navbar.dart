@@ -12,12 +12,7 @@ class Navbar extends StatelessWidget {
       height: 190,
       padding: const EdgeInsets.fromLTRB(18, 48, 18, 24),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [
-          Color.fromARGB(255, 74, 1, 19),
-          Color.fromARGB(255, 165, 42, 42),
-        ],
-        ),
+        color: Color.fromARGB(255,74,1,19),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(24),
           bottomRight: Radius.circular(24),
