@@ -14,9 +14,9 @@ class Navbar extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [
-            Color.fromARGB(255, 217, 43, 43),
-            Color.fromARGB(255, 224, 86, 81),
-          ],
+          Color.fromARGB(255, 74, 1, 19),
+          Color.fromARGB(255, 165, 42, 42),
+        ],
         ),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(24),
@@ -33,7 +33,6 @@ class Navbar extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Название
           Row(
             children: [
               Container(
@@ -70,9 +69,10 @@ class Navbar extends StatelessWidget {
               color: Colors.white,
               borderRadius: BorderRadius.circular(14),
             ),
-            child: const TextField(
-              decoration: InputDecoration(
-                hintText: 'Search',
+            child: TextField(
+              onChanged: onSearch,
+              decoration: const InputDecoration(
+                hintText: 'Search GIFs',
                 hintStyle: TextStyle(color: Colors.grey),
                 prefixIcon: Icon(Icons.search, color: Colors.grey),
                 border: InputBorder.none,
