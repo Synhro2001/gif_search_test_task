@@ -1,10 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import 'package:gif_search_test_task/models/gif.model.dart';
+
 import 'package:http/http.dart' as http;
 
 class GiphyService {
-  Future<List<String>> getTrendingGifs() async {
+  Future<List<Gif>> getTrendingGifs() async {
     final apiKey = dotenv.env['GIPHY_API_KEY'];
 
     final url = Uri.https(
@@ -28,8 +31,8 @@ class GiphyService {
 
     final data = json['data'] as List;
 
-    return data.map<String>((gif) {
-      return gif['images']['original']['url'] as String;
-    }).toList();
+    return data
+      .map<Gif>((gif) => Gif.fromJson(gif as Map<String, dynamic>)) // map iterates over each GIF
+      .toList();
   }
 }

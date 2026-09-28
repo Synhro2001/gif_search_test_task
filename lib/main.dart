@@ -15,7 +15,9 @@ Future<void> main() async {
     print('GIFs count: ${gifs.length}');
 
     for (final gif in gifs) {
-      print(gif);
+        print(gif.id);
+        print(gif.title);
+        print(gif.url);
     }
   } catch (e) {
     print('ERROR: $e');
