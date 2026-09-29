@@ -7,7 +7,10 @@ import 'package:gif_search_test_task/models/gif.model.dart';
 import 'package:http/http.dart' as http;
 
 class GiphyService {
-  Future<List<Gif>> getTrendingGifs() async {
+  Future<List<Gif>> getTrendingGifs({
+    int limit = 20,
+    int offset = 0
+  }) async {
     final apiKey = dotenv.env['GIPHY_API_KEY'];
 
     final url = Uri.https(
@@ -15,7 +18,8 @@ class GiphyService {
       '/v1/gifs/trending',
       {
         'api_key': apiKey,
-        'limit': '20',
+        'limit': limit.toString(),
+        'offset': offset.toString()
       },
     );
 

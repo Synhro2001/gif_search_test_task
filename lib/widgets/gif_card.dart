@@ -1,16 +1,16 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:gif_search_test_task/models/gif.model.dart';
 
 class GifCard extends StatelessWidget{
+  
+  final Gif gif;
+
   const GifCard({
-    required this.imageUrl,
-    required this.title,
+    required this.gif,
     super.key
   });
-
-  final String imageUrl;
-  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +19,13 @@ class GifCard extends StatelessWidget{
       child: Stack(
         fit: StackFit.expand,
         children: [
-          Image.network(imageUrl,fit: BoxFit.cover),
+          Image.network(gif.url ,fit: BoxFit.cover),
           Positioned(
             left: 8,
             right: 8,
             bottom: 8, 
             child: Text(
-              title,
+              gif.title,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
