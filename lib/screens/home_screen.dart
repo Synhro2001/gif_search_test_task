@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gif_search_test_task/models/gif.model.dart';
-import 'package:gif_search_test_task/services/giphy_services.dart';
-import 'package:gif_search_test_task/widgets/gif_card.dart';
+
+import 'package:gif_search_test_task/controllers/gif_controller.dart';
+import 'package:gif_search_test_task/widgets/gif_grid.dart';
 import 'package:gif_search_test_task/widgets/navbar.dart';
 
-// HomeScreen -> Widget
-//_HomeScreen -> Widget state
-//final means that variables itself cannot be reassigned
-
-class HomeScreen extends StatefulWidget { // changed screen state
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
@@ -16,95 +12,63 @@ class HomeScreen extends StatefulWidget { // changed screen state
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  
-  final GiphyService giphyService = GiphyService(); // don't change link 
+  final GifController gifController = GifController();
 
-  List<Gif> gifs = [];
-  String searchQuery = '';
-
-  bool isLoading = false;
-  String? errorMessage;
-
-  // parameter for pagination
-  final int pageSize = 20;
-  int offset = 0;
-  bool isLoadingMore = false;
-  bool hasMore = true;
-
-  Future<void> loadTrendingGifs() async {
-    setState(() {
-      isLoading = true;
-      errorMessage = null;
-    });
-
-    try {
-      final result = await giphyService.getTrendingGifs(
-        limit: pageSize,
-        offset: 0
-      );
-
-      if(!mounted) return;
-
-      setState(() {
-        gifs = result;
-        offset = result.length;
-        isLoading = false;
-      });
-    } catch(e) {
-      if(!mounted) return; // determined state if user finished program
-
-      setState(() {
-        errorMessage = e.toString();
-        isLoading = false;
-      });
-    }
-  }
-
-  Future<void> loadMoreGifs() async {
-    if(isLoadingMore || !hasMore) {
-      return;
-    }
-
-    setState(() {
-      isLoadingMore = true;
-    });
-
-    try {
-      final result = await giphyService.getTrendingGifs(
-        limit: pageSize,
-        offset: offset
-      );
-
-      if(!mounted) return;
-
-      setState(() {
-        gifs.addAll(result);
-        offset += result.length;
-        isLoadingMore = false;
-
-        if(result.length < pageSize){
-          hasMore = false;
-        }
-      });
-    } catch (e) {
-      if(!mounted) return;
-
-      setState(() {
-        isLoadingMore = false;
-      });
-    }
-  }
+  final ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
 
-    loadTrendingGifs();
+    scrollController.addListener(onScroll);
+
+    loadGifs();
   }
-  
+
+  Future<void> loadGifs() async {
+    await gifController.loadTrendingGifs();
+
+    if (!mounted) return;
+
+    setState(() {});
+  }
+
+  void onScroll() {
+    if (!scrollController.hasClients) {
+      return;
+    }
+
+    final currentPosition =
+        scrollController.position.pixels;
+
+    final maxPosition =
+        scrollController.position.maxScrollExtent;
+
+    if (currentPosition >= maxPosition - 300) {
+      loadMoreGifs();
+    }
+  }
+
+  Future<void> loadMoreGifs() async {
+    await gifController.loadMoreGifs();
+
+    if (!mounted) return;
+
+    setState(() {});
+  }
 
   void searchGifs(String query) {
-    print(query);
+    gifController.searchGifs(query);
+
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    scrollController.removeListener(onScroll);
+    scrollController.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -116,53 +80,40 @@ class _HomeScreenState extends State<HomeScreen> {
             title: 'Gif Search',
             onSearch: searchGifs,
           ),
-        Expanded(child: _buildContent()), // take available space 
-        
+
+          Expanded(
+            child: _buildContent(),
+          ),
         ],
       ),
     );
   }
 
   Widget _buildContent() {
-    if(isLoading) {
+    if (gifController.isLoading) {
       return const Center(
-        child:  CircularProgressIndicator(),
-      );
-    }
-    if (errorMessage != null) {
-      return Center(
-        child: Text(errorMessage!),
+        child: CircularProgressIndicator(),
       );
     }
 
-    if(gifs.isEmpty) {
+    if (gifController.errorMessage != null) {
+      return Center(
+        child: Text(
+          gifController.errorMessage!,
+        ),
+      );
+    }
+
+    if (gifController.gifs.isEmpty) {
       return const Center(
         child: Text('No GIFs found'),
       );
     }
-      return GridView.builder( // this constructor use for a large number of children
-      padding: const EdgeInsets.all(12),
 
-      gridDelegate:
-          const SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 200, // maxWidth: 200px
-        crossAxisSpacing: 12, // column-gap: 12px
-        mainAxisSpacing: 12,
-        childAspectRatio: 1,
-      ),
-
-      itemCount: gifs.length,
-
-      itemBuilder: (context, index) {
-        final gif = gifs[index];
-
-        return GifCard(
-          gif: gif,
-        );
-      },
+    return GifGrid(
+      gifs: gifController.gifs,
+      scrollController: scrollController,
+      isLoadingMore: gifController.isLoadingMore,
     );
-   
   }
-
-
 }
