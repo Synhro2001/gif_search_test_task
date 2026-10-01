@@ -45,10 +45,22 @@ class GifController {
     isLoadingMore = true;
 
     try {
-      final result = await giphyService.getTrendingGifs(
-        limit: pageSize,
-        offset: offset
-      );
+
+      final List<Gif> result;
+      
+      if(searchQuery.isEmpty){
+        result = await giphyService.getTrendingGifs(
+          limit: pageSize,
+          offset: offset
+        );
+      } else {
+        result = await giphyService.searchGifs(
+          searchQuery,
+          limit: pageSize,
+          offset: offset
+        );
+      }
+     
 
       gifs.addAll(result);
       offset += result.length;
@@ -63,10 +75,36 @@ class GifController {
     }
   }
 
-  void searchGifs(String query){
+  Future<void> searchGifs(String query) async {
     searchQuery = query;
 
-    print(query);
+    if(query.trim().isEmpty){
+      return;
+    }
+
+    isLoading = true;
+    errorMessage = null;
+    offset = 0;
+    hasMore = true;
+
+    try{
+      final result = await giphyService.searchGifs(
+        query,
+        limit: pageSize,
+        offset: 0,
+      );
+
+      gifs = result;
+      offset = result.length;
+
+      if(result.length < pageSize){
+        hasMore = false;
+      }
+    } catch(e){
+      errorMessage = e.toString();
+    } finally {
+      isLoading = false;
+    }
   }
 
 

@@ -57,10 +57,14 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
 
-  void searchGifs(String query) {
-    gifController.searchGifs(query);
+  Future<void> searchGifs(String query) async {
+    await gifController.searchGifs(query);
 
-    setState(() {});
+    if(!mounted) return;
+
+    setState(() {
+      
+    });
   }
 
   @override
