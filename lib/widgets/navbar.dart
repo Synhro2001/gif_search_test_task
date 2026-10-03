@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gif_search_test_task/constants/app_color.dart';
 
 class Navbar extends StatelessWidget {
   const Navbar({required this.title, required this.onSearch, super.key});
@@ -12,7 +13,7 @@ class Navbar extends StatelessWidget {
       height: 190,
       padding: const EdgeInsets.fromLTRB(18, 48, 18, 24),
       decoration: BoxDecoration(
-        color: Color.fromARGB(255,74,1,19),
+        color: AppColors.primary,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(24),
           bottomRight: Radius.circular(24),

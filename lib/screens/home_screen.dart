@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:gif_search_test_task/controllers/gif_controller.dart';
 import 'package:gif_search_test_task/widgets/gif_grid.dart';
+import 'package:gif_search_test_task/widgets/gif_loading_indicator.dart';
 import 'package:gif_search_test_task/widgets/navbar.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -57,22 +58,8 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
 
-  Future<void> searchGifs(String query) async {
-    await gifController.searchGifs(query);
-
-    if(!mounted) return;
-
-    setState(() {
-      
-    });
-  }
-
-  @override
-  void dispose() {
-    scrollController.removeListener(onScroll);
-    scrollController.dispose();
-
-    super.dispose();
+  void searchGifs(String query) {
+    gifController.searchGifsDebounce(query);
   }
 
   @override
@@ -86,7 +73,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
 
           Expanded(
-            child: _buildContent(),
+            child: AnimatedBuilder( // animatedBuilder works when notifyListener calls  
+              animation: gifController, 
+              builder: (context, child){
+                return _buildContent(); // show new gifController.gifs
+              }),
           ),
         ],
       ),
@@ -95,9 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildContent() {
     if (gifController.isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const LoadingIndicator();
     }
 
     if (gifController.errorMessage != null) {
@@ -119,5 +108,14 @@ class _HomeScreenState extends State<HomeScreen> {
       scrollController: scrollController,
       isLoadingMore: gifController.isLoadingMore,
     );
+  }
+
+   //Lifecycle ends
+  @override
+  void dispose() {
+    scrollController.removeListener(onScroll);
+    scrollController.dispose();
+    gifController.dispose();
+    super.dispose();
   }
 }

@@ -1,9 +1,12 @@
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:gif_search_test_task/models/gif.model.dart';
 import 'package:gif_search_test_task/services/giphy_services.dart';
 
-class GifController {
-
+class GifController extends ChangeNotifier { // управление состоянием и автоматическое обновление UI когда меняются данные
+// use changeNotifier for UI changes when data updates
   final GiphyService giphyService = GiphyService(); // final - don't change link 
 
   // parameter for pagination
@@ -18,9 +21,13 @@ class GifController {
   bool isLoading = false;
   String? errorMessage;
 
+  Timer? _debounce; // private variable
+
   Future<void> loadTrendingGifs() async {
     isLoading = true;
     errorMessage = null;
+
+    notifyListeners();
 
     try {
       final result = await giphyService.getTrendingGifs(
@@ -30,10 +37,15 @@ class GifController {
 
       gifs = result;
       offset = result.length;
+
+
     } catch (e) {
       errorMessage = e.toString();
+
     } finally {
       isLoading = false;
+
+      notifyListeners();
     }
   }
 
@@ -43,6 +55,8 @@ class GifController {
     }
 
     isLoadingMore = true;
+
+    notifyListeners();
 
     try {
 
@@ -72,11 +86,12 @@ class GifController {
       print('Load error: $e');
     } finally {
       isLoadingMore = false;
+      notifyListeners();
     }
   }
 
   Future<void> searchGifs(String query) async {
-    searchQuery = query;
+    searchQuery = query.trim(); // delete space
 
     if(query.trim().isEmpty){
       return;
@@ -86,6 +101,8 @@ class GifController {
     errorMessage = null;
     offset = 0;
     hasMore = true;
+
+    notifyListeners();
 
     try{
       final result = await giphyService.searchGifs(
@@ -104,8 +121,23 @@ class GifController {
       errorMessage = e.toString();
     } finally {
       isLoading = false;
+      notifyListeners();
     }
   }
 
+  void searchGifsDebounce(String query){
+    _debounce?.cancel();
 
+    _debounce = Timer(
+      const Duration(milliseconds: 300), () {
+        searchGifs(query);
+      }
+    );
+  }
+
+  @override
+  void dispose(){
+    _debounce?.cancel();
+    super.dispose();
+  }
 }
