@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:gif_search_test_task/controllers/gif_controller.dart';
+import 'package:gif_search_test_task/widgets/gif_display_error.dart';
 import 'package:gif_search_test_task/widgets/gif_grid.dart';
 import 'package:gif_search_test_task/widgets/gif_loading_indicator.dart';
 import 'package:gif_search_test_task/widgets/navbar.dart';
@@ -90,10 +91,8 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     if (gifController.errorMessage != null) {
-      return Center(
-        child: Text(
-          gifController.errorMessage!,
-        ),
+      return GifDisplayError(
+        onRetry: loadGifs,
       );
     }
 
