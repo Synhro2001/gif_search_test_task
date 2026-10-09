@@ -5,6 +5,7 @@ import 'package:gif_search_test_task/widgets/gif_display_error.dart';
 import 'package:gif_search_test_task/widgets/gif_grid.dart';
 import 'package:gif_search_test_task/widgets/gif_loading_indicator.dart';
 import 'package:gif_search_test_task/widgets/navbar.dart';
+import 'package:gif_search_test_task/widgets/search_input.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,7 +16,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final GifController gifController = GifController();
-
+  final TextEditingController searchTextController = TextEditingController();
   final ScrollController scrollController = ScrollController();
 
   @override
@@ -70,7 +71,13 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Navbar(
             title: 'Gif Search',
-            onSearch: searchGifs,
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16 , 8),
+            child: SearchInput(
+              onChanged: searchGifs, controller: searchTextController,
+            ),
+            
           ),
 
           Expanded(
@@ -114,6 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void dispose() {
     scrollController.removeListener(onScroll);
     scrollController.dispose();
+    searchTextController.dispose();
     gifController.dispose();
     super.dispose();
   }
