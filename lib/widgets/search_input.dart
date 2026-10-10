@@ -28,9 +28,8 @@ class SearchInput extends StatelessWidget {
           size: 24,
         ),
 
-        // Rounded field with white field
         filled: true,
-        fillColor: AppColors.surface,
+        fillColor: AppColors.searchBackground,
 
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
@@ -44,15 +43,13 @@ class SearchInput extends StatelessWidget {
 
         //An unobtrusive boundary in the normal state.
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
-          borderSide: const BorderSide(
-            color: AppColors.border,
-          ),
+          borderRadius: BorderRadius.circular(24),
+          borderSide: BorderSide.none
         ),
 
         // Purple border when clicked
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(24),
           borderSide: const BorderSide(
             color: AppColors.primary,
             width: 1.5

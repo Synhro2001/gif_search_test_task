@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gif_search_test_task/constants/app_color.dart';
 
 import 'package:gif_search_test_task/controllers/gif_controller.dart';
 import 'package:gif_search_test_task/widgets/gif_display_error.dart';
@@ -8,7 +9,15 @@ import 'package:gif_search_test_task/widgets/navbar.dart';
 import 'package:gif_search_test_task/widgets/search_input.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+
+  final bool isDarkMode;
+  final VoidCallback onToggleTheme;
+
+  const HomeScreen({
+    super.key,
+    required this.isDarkMode,
+    required this.onToggleTheme,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -67,10 +76,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(
         children: [
           Navbar(
             title: 'Gif Search',
+            isDarkMode: widget.isDarkMode,
+            onToggleTheme: widget.onToggleTheme
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16 , 8),
