@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:gif_search_test_task/models/gif.model.dart';
-import 'package:gif_search_test_task/screens/gif_details_screen.dart';
+import 'package:gif_search_test_task/navigation/app_navigator.dart';
 import 'package:gif_search_test_task/widgets/gif_card.dart';
 
 class GifGrid extends StatelessWidget {
@@ -46,10 +46,7 @@ class GifGrid extends StatelessWidget {
         return GifCard(
           gif: gif,
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => GifDetailsScreen(gif: gif))
-            );
+            AppNavigator.openGifDetails(context, gif);
           },
         );
       },

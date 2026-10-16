@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gif_search_test_task/constants/app_color.dart';
 import 'package:gif_search_test_task/models/gif.model.dart';
+import 'package:gif_search_test_task/navigation/app_navigator.dart';
 import 'package:gif_search_test_task/widgets/gif_details_info.dart';
 
 class GifDetailsScreen extends StatelessWidget{
@@ -29,7 +30,7 @@ class GifDetailsScreen extends StatelessWidget{
             child: Row(
               children: [
                 IconButton(onPressed: () {
-                  Navigator.pop(context);
+                  AppNavigator.goBack(context);
                 }, 
                 icon: const Icon(
                   Icons.arrow_back,
