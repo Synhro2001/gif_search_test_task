@@ -82,6 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Navbar(
             title: 'Gif Search',
             isDarkMode: widget.isDarkMode,
+            subtitle: 'Find your GIF',
             onToggleTheme: widget.onToggleTheme
           ),
           Padding(

@@ -3,6 +3,7 @@ import 'package:gif_search_test_task/constants/app_color.dart';
 import 'package:gif_search_test_task/models/gif.model.dart';
 import 'package:gif_search_test_task/navigation/app_navigator.dart';
 import 'package:gif_search_test_task/widgets/gif_details_info.dart';
+import 'package:gif_search_test_task/widgets/navbar.dart';
 
 class GifDetailsScreen extends StatelessWidget{
   final Gif gif;
@@ -14,39 +15,14 @@ class GifDetailsScreen extends StatelessWidget{
 
   @override
   Widget build(BuildContext context){
+    final theme = Theme.of(context);
+    
     return Scaffold(
       body: Column(
         children: [
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.fromLTRB(18, 48, 18, 24),
-            decoration: const BoxDecoration(
-              color: AppColors.primary,
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(24),
-                bottomRight: Radius.circular(24)
-              ),
-            ),
-            child: Row(
-              children: [
-                IconButton(onPressed: () {
-                  AppNavigator.goBack(context);
-                }, 
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
-                )),
-                const SizedBox(width: 4),
-                const Text(
-                  'GIF Details',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600
-                  ),
-                )
-              ],
-            ),
+          Navbar(
+            title: 'GIF Details',
+            onBack: () => AppNavigator.goBack(context),
           ),
           Expanded(
             child: SingleChildScrollView(

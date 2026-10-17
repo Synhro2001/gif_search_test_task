@@ -7,7 +7,11 @@ import 'package:gif_search_test_task/services/giphy_services.dart';
 
 class GifController extends ChangeNotifier { // управление состоянием и автоматическое обновление UI когда меняются данные
 // use changeNotifier for UI changes when data updates
-  final GiphyService giphyService = GiphyService(); // final - don't change link 
+
+  // dependency injection 
+  final GiphyService giphyService;
+
+  GifController({GiphyService? giphyService}) : giphyService = giphyService ?? GiphyService();
 
   // parameter for pagination
   final int pageSize = 20;

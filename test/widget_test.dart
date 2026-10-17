@@ -5,25 +5,51 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gif_search_test_task/app.dart';
+import 'package:gif_search_test_task/controllers/gif_controller.dart';
+import 'package:gif_search_test_task/models/gif.model.dart';
+
+import 'test_service.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  test('Loads trending Gifs into the controller', () async {
+    const testGif = Gif(
+      id: '1',
+      title: 'Test GIF',
+      url: 'https://example.com/test.gif',
+      username: 'Test user',
+      createDateTime: '',
+      source: ''
+    );
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    final testService = TestService(testGifs: [testGif],);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    final controller = GifController(giphyService: testService);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    await controller.loadTrendingGifs();
+
+    expect(controller.gifs, hasLength(1));
+    expect(controller.gifs.first.title, 'Test GIF');
+    expect(controller.isLoading, isFalse);
+    expect(controller.errorMessage, isNull);
+
+    controller.dispose();
+  });
+
+  test('handle an error when trying to find GIFs', () async {
+    final testService = TestService(
+      testGifs: [],
+      shouldThrowError: true // error
+    );
+
+    final controller = GifController(
+      giphyService: testService
+    );
+
+    await controller.loadTrendingGifs();
+
+    expect(controller.errorMessage, isNotNull);
+    expect(controller.errorMessage, contains('Failed to load GIFs'));
+    expect(controller.isLoading, isFalse);
   });
 }
