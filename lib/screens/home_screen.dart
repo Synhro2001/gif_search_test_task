@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gif_search_test_task/constants/app_color.dart';
-
 import 'package:gif_search_test_task/controllers/gif_controller.dart';
+import 'package:gif_search_test_task/navigation/app_navigator.dart';
 import 'package:gif_search_test_task/widgets/gif_display_error.dart';
 import 'package:gif_search_test_task/widgets/gif_grid.dart';
 import 'package:gif_search_test_task/widgets/gif_loading_indicator.dart';
@@ -9,14 +8,15 @@ import 'package:gif_search_test_task/widgets/navbar.dart';
 import 'package:gif_search_test_task/widgets/search_input.dart';
 
 class HomeScreen extends StatefulWidget {
-
+  final AppRouter router;
   final bool isDarkMode;
   final VoidCallback onToggleTheme;
 
   const HomeScreen({
     super.key,
     required this.isDarkMode,
-    required this.onToggleTheme,
+    required this.onToggleTheme, 
+    required this.router,
   });
 
   @override
@@ -126,6 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
       gifs: gifController.gifs,
       scrollController: scrollController,
       isLoadingMore: gifController.isLoadingMore,
+      onGifTap: widget.router.openGifDetails,
     );
   }
 

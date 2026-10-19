@@ -3,19 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:gif_search_test_task/models/gif.model.dart';
 import 'package:gif_search_test_task/screens/gif_details_screen.dart';
 
-class AppNavigator {
-  static void openGifDetails(BuildContext context, Gif gif) {
-    Navigator.of(context).push(
+class AppRouter {
+  final navigatorKey = GlobalKey<NavigatorState>();
+
+  void openGifDetails(Gif gif) {
+    navigatorKey.currentState?.push(
       MaterialPageRoute<void>(
-        builder: (_) => GifDetailsScreen(gif: gif),
-      )
+        builder: (_) => GifDetailsScreen(gif: gif, onBack: back
+      ))
     );
   }
 
-  static void goBack(BuildContext context) {
-    Navigator.of(context).pop();
-  }
+  void back() => navigatorKey.currentState?.pop();
 }
 
-// create class to separate UI navigation 
-// create a static method because we dont needed create objet when call it
